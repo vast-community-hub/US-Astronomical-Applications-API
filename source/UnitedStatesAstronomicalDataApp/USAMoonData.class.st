@@ -22,18 +22,21 @@ Class {
 { #category : 'Not categorized' }
 USAMoonData >> data: aDictionary [
 	"Set our values from the dictionary."
-	| anArray dateMilliseconds |
+	| theDate anArray dateMilliseconds |
 
-	dateMilliseconds := (self dateFromDictionary: aDictionary) asMilliseconds.
-	anArray := aDictionary at: 'moondata' ifAbsent: [Array new].
-	anArray do: [:dic | | key timeString dateAndTimeMilliseconds dateAndTime |
-		key := dic at: 'phen' ifAbsent: [''].
-		timeString := dic at: 'time' ifAbsent: [''].
-		dateAndTimeMilliseconds := dateMilliseconds + ((USAUT1Time fromUSAString: timeString) asMilliseconds).
-		dateAndTime := DateAndTime fromMilliseconds: dateAndTimeMilliseconds offset: Duration zero.
-		(key = 'Rise') ifTrue: [moonriseUtc := dateAndTime].
-		(key = 'Set') ifTrue: [moonsetUtc := dateAndTime].
-		(key = 'Upper Transit') ifTrue: [upperTransitUtc := dateAndTime].
+	theDate := self dateFromDictionary: aDictionary.
+	theDate notNil ifTrue: [
+		dateMilliseconds := theDate asMilliseconds.
+		anArray := aDictionary at: 'moondata' ifAbsent: [Array new].
+		anArray do: [:dic | | key timeString dateAndTimeMilliseconds dateAndTime |
+			key := dic at: 'phen' ifAbsent: [''].
+			timeString := dic at: 'time' ifAbsent: [''].
+			dateAndTimeMilliseconds := dateMilliseconds + ((USAUT1Time fromUSAString: timeString) asMilliseconds).
+			dateAndTime := DateAndTime fromMilliseconds: dateAndTimeMilliseconds offset: Duration zero.
+			(key = 'Rise') ifTrue: [moonriseUtc := dateAndTime].
+			(key = 'Set') ifTrue: [moonsetUtc := dateAndTime].
+			(key = 'Upper Transit') ifTrue: [upperTransitUtc := dateAndTime].
+		].
 	].
 
 ]

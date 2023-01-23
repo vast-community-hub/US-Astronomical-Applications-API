@@ -42,20 +42,23 @@ USASunData >> beginCivilTwilightUtc [
 { #category : 'Not categorized' }
 USASunData >> data: aDictionary [
 	"Set our values from the dictionary."
-	| anArray dateMilliseconds |
+	| theDate anArray dateMilliseconds |
 
-	dateMilliseconds := (self dateFromDictionary: aDictionary) asMilliseconds.
-	anArray := aDictionary at: 'sundata' ifAbsent: [Array new].
-	anArray do: [:dic | | key timeString dateAndTimeMilliseconds dateAndTime |
-		key := dic at: 'phen' ifAbsent: [''].
-		timeString := dic at: 'time' ifAbsent: [''].
-		dateAndTimeMilliseconds := dateMilliseconds + ((USAUT1Time fromUSAString: timeString) asMilliseconds).
-		dateAndTime := DateAndTime fromMilliseconds: dateAndTimeMilliseconds offset: Duration zero.
-		(key = 'Begin Civil Twilight') ifTrue: [beginCivilTwilightUtc := dateAndTime].
-		(key = 'End Civil Twilight') ifTrue: [endCivilTwilightUtc := dateAndTime].
-		(key = 'Rise') ifTrue: [sunriseUtc := dateAndTime].
-		(key = 'Set') ifTrue: [sunsetUtc := dateAndTime].
-		(key = 'Upper Transit') ifTrue: [upperTransitUtc := dateAndTime].
+	theDate := self dateFromDictionary: aDictionary.
+	theDate notNil ifTrue: [
+		dateMilliseconds := theDate asMilliseconds.
+		anArray := aDictionary at: 'sundata' ifAbsent: [Array new].
+		anArray do: [:dic | | key timeString dateAndTimeMilliseconds dateAndTime |
+			key := dic at: 'phen' ifAbsent: [''].
+			timeString := dic at: 'time' ifAbsent: [''].
+			dateAndTimeMilliseconds := dateMilliseconds + ((USAUT1Time fromUSAString: timeString) asMilliseconds).
+			dateAndTime := DateAndTime fromMilliseconds: dateAndTimeMilliseconds offset: Duration zero.
+			(key = 'Begin Civil Twilight') ifTrue: [beginCivilTwilightUtc := dateAndTime].
+			(key = 'End Civil Twilight') ifTrue: [endCivilTwilightUtc := dateAndTime].
+			(key = 'Rise') ifTrue: [sunriseUtc := dateAndTime].
+			(key = 'Set') ifTrue: [sunsetUtc := dateAndTime].
+			(key = 'Upper Transit') ifTrue: [upperTransitUtc := dateAndTime].
+		].
 	].
 
 ]
